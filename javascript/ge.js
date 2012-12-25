@@ -1,8 +1,9 @@
 var ge, placemark,
-    sap = [32.1966, 34.88436];
+    sap = [32.1966, 34.88436],
+    target = 'moon';
 
 function init() {
-    google.earth.createInstance('map3d', initCallback, failureCallback);
+    showPlanet('earth');
 }
 
 function initCallback(instance) {
@@ -24,11 +25,57 @@ function initCallback(instance) {
         setPlaceMark();
     }, 15000);
 
+//    ge = instance;
+//
+//    goSAPBtn();
+//    showSky();
+
+//    if (target === 'moon') {
+//        setTimeout(function () {
+//            ge.getWindow().setVisibility(true);
+//            visAuto();
+//            showSun();
+//            target = 'earth';
+//            showPlanet(target);
+//        }, 15000);
+//    }
+//    else if (target === 'moon') {
+//        setTimeout(function () {
+//            ge.getWindow().setVisibility(true);
+//            visAuto();
+//            showSun();
+//        }, 2000);
+//    } else {
+//        setTimeout(function () {
+//            ge.getWindow().setVisibility(true);
+//            showEarth();
+//            visAuto();
+//            showSun();
+//            goSAP(6000);
+//            setPlaceMark();
+//        }, 15000);
+//    }
 
 }
 
 function failureCallback(errorCode) {
     console.log(errorCode);
+}
+
+
+function showPlanet(target) {
+    document.getElementById('map3d').innerHTML = '';
+    switch(target) {
+        case 'moon':
+            google.earth.createInstance('map3d', initCallback, failureCallback, { database: 'http://khmdb.google.com/?db=moon' });
+            break;
+        case 'mars':
+            google.earth.createInstance('map3d', initCallback, failureCallback, { database: 'http://khmdb.google.com/?db=mars' });
+            break;
+        default:
+            google.earth.createInstance('map3d', initCallback, failureCallback);
+            break;
+    }
 }
 
 // visibility
@@ -73,6 +120,7 @@ function showSky() {
         $('#map3d').css({
             visibility: 'visible'
         });
+
         // Zoom in on a nebula.
         var oldFlyToSpeed = ge.getOptions().getFlyToSpeed();
         ge.getOptions().setFlyToSpeed(.2);  // Slow down the camera flyTo speed.
