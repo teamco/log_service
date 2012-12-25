@@ -14,15 +14,23 @@ Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
     <script type="text/javascript" src="javascript/jquery.js"></script>
     <script type="text/javascript" src="javascript/ge.js"></script>
     <script type="text/javascript" src="javascript/extends.js"></script>
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+    <script type="text/javascript" src="javascript/chart_users.js"></script>
+
     <script type="text/javascript">
         google.load("earth", "1");
-        google.setOnLoadCallback(init);
+//        google.setOnLoadCallback(init);
     </script>
 </head>
 <body>
 <div id="wrapper">
     <div id="map3d"></div>
-    <div id="bottom"></div>
+    <div id="bottom">
+        <div id="container" style="min-width: 400px; height: 100%; margin: 0 auto"></div>
+    </div>
     <div id="right">
         <ul>
             <li>

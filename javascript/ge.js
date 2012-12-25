@@ -127,7 +127,7 @@ function setPlaceMark() {
 
 // Define a custom icon.
     var icon = ge.createIcon('');
-    icon.setHref('http://www.haironfirepm.com/wp-content/uploads/2012/08/SAP_icon.png');
+    icon.setHref('http://dl.dropbox.com/u/9268245/SAP_icon.png');
     var style = ge.createStyle('');
     style.getIconStyle().setIcon(icon);
     style.getIconStyle().setScale(5.0);
