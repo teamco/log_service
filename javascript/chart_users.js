@@ -1,7 +1,7 @@
+var chartUsers, chartUsersOpts;
 $(function () {
-    var chart;
     $(document).ready(function () {
-        var opts = {
+        chartUsersOpts = {
             chart: {
                 renderTo: 'container',
                 zoomType: 'x',
@@ -71,34 +71,24 @@ $(function () {
             ]
         };
 
-//        var jqxhr = $.getJSON("http://10.26.181.181:8080/InnoJam2012/API/getConcurrentUsers?jsoncallback=?", null, function (data) {
-//            console.log(arguments)
-//        })
-//            .error(function () {
-//                console.log("error", arguments);
-//            });
 
-        jQuery.ajax({
-            url: 'http://10.26.181.181:8080/WebEye/API/getConcurrentUsers',
-            async: false,
-            contentType: "application/json",
-            dataType: 'jsonp',
-            type: 'GET'
-        }).done(function (data, type, xhr) {
-                opts.series[0].data = data;
-                console.log(opts)
-                chart = new Highcharts.Chart(opts);
-
-            }).fail(function () {
-                console.log('fail', arguments)
-            });
-
-//        jQuery.getJSON("http://search.twitter.com/search.json?callback=?",{
-//            q: "Arsenal"
-//        },function(tweets) {
-//            // Handle response here
-//            console.info("Twitter returned: ",tweets);
-//        });
     });
 
 });
+
+function renderChartUsers() {
+    jQuery.ajax({
+        url: 'http://10.26.181.181:8080/labs/API/getConcurrentUsers?'+timeParams+'&' + boundParams + '&callback=?',
+        async: false,
+        contentType: "application/json",
+        dataType: 'jsonp',
+        type: 'GET'
+    }).done(function (data, type, xhr) {
+            chartUsersOpts.series[0].data = data;
+            console.log(chartUsersOpts)
+            chartUsers = new Highcharts.Chart(chartUsersOpts);
+
+        }).fail(function () {
+            console.log('fail', arguments)
+        });
+}

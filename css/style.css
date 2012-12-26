@@ -182,5 +182,44 @@ li {
 input.navigation {
     position: absolute;
     top: 10px;
+}
+
+input.navigation.earth {
     left: 10px;
 }
+
+input.navigation.home {
+    left: 60px;
+}
+
+input.navigation.borders {
+    left: 140px;
+}
+
+.widget div.data.users {
+    background-image: none;
+    text-align: center;
+    display: table;
+    position: absolute;
+}
+
+.widget div.data.users span.title {
+    height: 10%;
+    width: 100%;
+    vertical-align: middle;
+    position: absolute;
+    padding: 10px 0;
+    font-size: 120%;
+    color: darkslategrey;
+    font-family: Verdana, Tahoma, sans-serif;
+}
+.widget div.data.users span.count {
+    display: table-cell;
+    height: 100%;
+    width: 100%;
+    font-size: 500%;
+    vertical-align: middle;
+    text-shadow: 2px 2px 10px #333;
+    color: steelBlue;
+}
+
