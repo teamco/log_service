@@ -196,6 +196,10 @@ input.navigation.borders {
     left: 140px;
 }
 
+input.navigation.bordershide {
+    left: 240px;
+}
+
 .widget div.data.users {
     background-image: none;
     text-align: center;

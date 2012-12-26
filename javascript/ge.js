@@ -17,6 +17,7 @@ function initCallback(instance) {
     addButton('Earth', goToEarth, 'right', 'earth');
     addButton('Fly to SAP', goSAP, 'right', 'home');
     addButton('Show Borders', showBorders, 'right', 'borders');
+    addButton('Hide Borders', hideBorders, 'right', 'bordershide');
 
 //    showSky();
 
@@ -59,6 +60,10 @@ function failureCallback(errorCode) {
 
 function showBorders() {
     ge.getLayerRoot().enableLayerById(ge.LAYER_BORDERS, true);
+}
+
+function hideBorders() {
+    ge.getLayerRoot().enableLayerById(ge.LAYER_BORDERS, false);
 }
 
 function showRoads() {
@@ -152,13 +157,14 @@ function showEarth() {
         ge.getView().setAbstractView(lookAt);
         ge.getOptions().setFlyToSpeed(oldFlyToSpeed);
 
-        google.earth.addEventListener(ge.getView(), 'viewchangeend', function(evt) {
+        google.earth.addEventListener(ge.getView(), 'viewchangeend', function (evt) {
             boundParams = getBoundParams();
             timeParams = getTimeParams();
 
             renderUserCountries();
             renderChartUsers();
             renderBrowsers();
+            renderClients();
 
         });
 
@@ -265,22 +271,23 @@ function goTo(name) {
             var country = geocoder.ca.ca[name.toLowerCase()].Placemark[0].AddressDetails.Country.CountryNameCode;
             setPlaceMark(name, 'http://dl.dropbox.com/u/9268245/flags/' + country + '.png', point.y, point.x, 0.8);
 
-
-            jQuery.ajax({
-                url: 'http://10.26.181.181:8080/labs/API/getUsers?'+timeParams+'&' + boundParams + '&callback=?',
-                async: false,
-                contentType: "application/json",
-                dataType: 'jsonp',
-                type: 'GET'
-            }).done(function (data, type, xhr) {
-
-
-                }).fail(function () {
-                    console.log('fail', arguments)
-                });
-
-
         }
     });
+
+}
+
+function renderClients() {
+    jQuery.ajax({
+        url: 'http://10.26.181.181:8080/labs/API/getUsers?' + timeParams + '&' + boundParams + '&callback=?',
+        async: false,
+        contentType: "application/json",
+        dataType: 'jsonp',
+        type: 'GET'
+    }).done(function (data, type, xhr) {
+
+
+        }).fail(function () {
+            console.log('fail', arguments)
+        });
 
 }
