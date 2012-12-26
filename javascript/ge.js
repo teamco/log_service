@@ -1,7 +1,8 @@
 var ge, placemark,
     sap = [32.1966, 34.88436],
     target = 'moon',
-    boundParams, timeParams;
+    boundParams, timeParams,
+    clients =[];
 
 function init() {
     showPlanet('earth');
@@ -190,10 +191,10 @@ function hideSun() {
     ge.getSun().setVisibility(false);
 }
 
-function setPlaceMark(name, iconURL, x, y, scale) {
+function setPlaceMark(markName, iconURL, x, y, scale) {
 // Create the placemark.
     var placemark = ge.createPlacemark('');
-    placemark.setName(name);
+    placemark.setName(markName);
 
 // Define a custom icon.
     var icon = ge.createIcon('');
@@ -203,6 +204,7 @@ function setPlaceMark(name, iconURL, x, y, scale) {
     style.getIconStyle().setScale(scale);
     placemark.setStyleSelector(style);
 
+
 // Set the placemark's location.
     var point = ge.createPoint('');
     point.setLatitude(x);
@@ -211,6 +213,17 @@ function setPlaceMark(name, iconURL, x, y, scale) {
 
 // Add the placemark to Earth.
     ge.getFeatures().appendChild(placemark);
+    clients.push(placemark);
+}
+
+function removePlacemarks() {
+    //var kmlObjectList = ge.getFeatures().getChildNodes();
+    console.log(clients.length);
+    for (var i = 0; i < clients.length; i++) {
+        console.log("Delete ",clients[i]);
+        ge.getFeatures().removeChild(clients[i]);
+    }
+    clients = [];
 }
 
 function addButton(caption, clickHandler, containerId, className) {
@@ -276,6 +289,20 @@ function goTo(name) {
 
 }
 
+function getUserIconURL(avgSpeed) {
+    var userIconURL = "http://t3.gstatic.com/images?q=tbn:ANd9GcSR6J1ZWF2CorpjoMl2QM8FBfFLlmjf7a0UthO3g5Cl5f76gGrEpWYh-A";
+    if(avgSpeed > 0 && avgSpeed <= 5) {
+        userIconURL = 'http://dl.dropbox.com/u/9268245/red_monster.png';
+    }else if(avgSpeed > 5 && avgSpeed <= 10) {
+        userIconURL = 'http://dl.dropbox.com/u/9268245/yellow_monster.png';
+    }else if(avgSpeed > 10 && avgSpeed <= 20) {
+        userIconURL = 'http://dl.dropbox.com/u/9268245/green_monster.png';
+    }else if(avgSpeed >= 20) {
+        userIconURL = 'http://dl.dropbox.com/u/9268245/BOBA.png';
+    }
+    return userIconURL;
+}
+
 function renderClients() {
     jQuery.ajax({
         url: 'http://10.26.181.181:8080/labs/API/getUsers?' + timeParams + '&' + boundParams + '&callback=?',
@@ -285,9 +312,66 @@ function renderClients() {
         type: 'GET'
     }).done(function (data, type, xhr) {
 
+            removePlacemarks();
 
-        }).fail(function () {
+            var fake = [
+                {
+                    name: 'test1',
+                    lon: 32.1,
+                    lat: 35.1,
+                    avgSpeed: 1
+                },
+                {
+                    name: 'test2',
+                    lon: 32.1,
+                    lat: 35.3,
+                    avgSpeed: 10
+                },
+                {
+                    name: 'test3',
+                    lon: 32.1,
+                    lat: 35.5,
+                    avgSpeed: 2
+                },
+                {
+                    name: 'test4',
+                    lon: 32.1,
+                    lat: 35.7,
+                    avgSpeed: 5
+                },
+                {
+                    name: 'test5',
+                    lon: 32.1,
+                    lat: 35.9,
+                    avgSpeed: 7
+                },
+                {
+                    name: 'test6',
+                    lon: 32.1,
+                    lat: 36.1,
+                    avgSpeed: 3
+                },
+                {
+                    name: 'test7',
+                    lon: 32.1,
+                    lat: 39.3,
+                    avgSpeed: 7
+                },
+                {
+                    name: 'BOBA',
+                    lon: 32.5,
+                    lat: 35.3,
+                    avgSpeed: 100
+                }
+            ];
+
+            for(var i=0; i<fake.length; i+=1) {
+                setPlaceMark(fake[i].name, getUserIconURL(fake[i].avgSpeed), fake[i].lon, fake[i].lat, 1.0);
+            }
+
+
+    }).fail(function () {
             console.log('fail', arguments)
-        });
+    });
 
 }
