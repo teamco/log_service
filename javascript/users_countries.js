@@ -80,12 +80,20 @@ function renderUserCountries() {
         });
 }
 
-function addNote(country, short) {
+function addNote(country, short, type) {
+
+    var text = '';
+    if (type === 'off') {
+        text = 'Service is not available to ' + country + ' residents.<br /><br /><a href=\'javascript:goTo("' + country + '")\'>Fly to ' + country + '</a>';
+    } else {
+        text = 'Traffic rate stunted for ' + country + ' residents.<br /><br /><a href=\'javascript:goTo("' + country + '")\'>Fly to ' + country + '</a>';
+    }
+
     $.gritter.add({
         // (string | mandatory) the heading of the notification
         title: 'Warning',
         // (string | mandatory) the text inside the notification
-        text: 'Service is not available to ' + country + ' residents.<br /><br /><a href=\'javascript:goTo("' + country + '")\'>Fly to ' + country + '</a>',
+        text: text,
         // (string | optional) the image to display on the left
         image: 'http://dl.dropbox.com/u/9268245/flags/' + short + '.png',
         // (bool | optional) if you want it to fade out on its own or just sit there

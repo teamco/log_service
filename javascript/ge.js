@@ -303,6 +303,15 @@ function getTimeParams() {
 
     $('#time').text(t);
 
+    if (t.getDate() === 27) {
+        addNote('United States', 'us', 'off');
+    }
+
+    if (t.getDate() === 28) {
+        addNote('Russian Federation', 'ru', 'slow');
+    }
+
+
     return 't0=' + datetime.join('');
 }
 
