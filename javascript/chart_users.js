@@ -78,7 +78,7 @@ $(function () {
 
 function renderChartUsers() {
     jQuery.ajax({
-        url: 'http://10.26.181.181:8080/labs/API/getConcurrentUsers?'+timeParams+'&' + boundParams + '&callback=?',
+        url: 'http://10.26.181.181:8080/labs/API/getConcurrentUsers?' + timeParams + '&' + boundParams + '&callback=?',
         async: false,
         contentType: "application/json",
         dataType: 'jsonp',
