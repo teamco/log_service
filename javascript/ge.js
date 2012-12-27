@@ -34,7 +34,7 @@ function initCallback(instance) {
     addButton('Stop', stop, 'buttons');
     addButton('Clear', removePlacemarks, 'buttons');
 
-//    showSky();
+    showSky();
 
 //    ge = instance;
 //
@@ -303,14 +303,17 @@ function getTimeParams() {
 
     $('#time').text(t);
 
-    if (t.getDate() === 27) {
+    if (t.getDate() === 27 && t.getHours() > 0 && t.getHours() < 6) {
         addNote('United States', 'us', 'off');
     }
 
-    if (t.getDate() === 28) {
+    if (t.getDate() === 28 && t.getHours() > 0 && t.getHours() < 6) {
         addNote('Russian Federation', 'ru', 'slow');
     }
 
+    if (t.getDate() === 29 && t.getHours() > 0 && t.getHours() < 6) {
+        addNote('Israel', 'IL', 'peak');
+    }
 
     return 't0=' + datetime.join('');
 }
