@@ -1,6 +1,6 @@
 var userCountries, userCountriesOpts;
 $(function () {
-    $(document).ready(function() {
+    $(document).ready(function () {
         userCountriesOpts = {
             chart: {
                 renderTo: 'user-countries',
@@ -25,9 +25,9 @@ $(function () {
                 }
             },
             tooltip: {
-                formatter: function() {
-                    return ''+
-                        this.series.name +': '+ this.y +' users';
+                formatter: function () {
+                    return '' +
+                        this.series.name + ': ' + this.y + ' users';
                 }
             },
             plotOptions: {
@@ -36,7 +36,7 @@ $(function () {
                         enabled: true
                     },
                     events: {
-                        click: function() {
+                        click: function () {
                             //goSAP();
                             goTo(this.name);
                         }
@@ -44,12 +44,6 @@ $(function () {
                 }
             },
             legend: {
-//                layout: 'horizontal',
-//                align: 'center',
-//                verticalAlign: 'bottom',
-//                x: 100,
-//                y: 100,
-//                floating: true,
                 borderWidth: 1,
                 backgroundColor: '#FFFFFF',
                 shadow: true
@@ -62,7 +56,7 @@ $(function () {
 
 function renderUserCountries() {
     jQuery.ajax({
-        url: 'http://10.26.181.181:8080/labs/API/getTotalUsers?'+timeParams+'&' + boundParams + '&callback=?',
+        url: 'http://10.26.181.181:8080/labs/API/getTotalUsers?' + timeParams + '&' + boundParams + '&callback=?',
         async: false,
         contentType: "application/json",
         dataType: 'jsonp',
@@ -72,7 +66,33 @@ function renderUserCountries() {
             console.log(userCountriesOpts)
             userCountries = new Highcharts.Chart(userCountriesOpts);
 
+            var totalUsers = 0, i = 0, l = userCountriesOpts.series.length;
+
+            for (i; i < l; i += 1) {
+                var users = userCountriesOpts.series[i];
+                totalUsers += users.data[0];
+            }
+
+            $('.users span.count').text(totalUsers);
+
         }).fail(function () {
             console.log('fail', arguments)
         });
+}
+
+function addNote(country, short) {
+    $.gritter.add({
+        // (string | mandatory) the heading of the notification
+        title: 'Warning',
+        // (string | mandatory) the text inside the notification
+        text: 'Service is not available to ' + country + ' residents.<br /><br /><a href=\'javascript:goTo("' + country + '")\'>Fly to ' + country + '</a>',
+        // (string | optional) the image to display on the left
+        image: 'http://dl.dropbox.com/u/9268245/flags/' + short + '.png',
+        // (bool | optional) if you want it to fade out on its own or just sit there
+        sticky: true,
+        // (int | optional) the time you want it to be alive for before fading out
+        time: '',
+        // (string | optional) the class name you want to apply to that specific message
+        class_name: 'my-sticky-class'
+    });
 }

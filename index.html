@@ -15,14 +15,25 @@ Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
     <script type="text/javascript" src="javascript/ge.js"></script>
     <script type="text/javascript" src="javascript/extends.js"></script>
 
-    <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="javascript/highcharts.js"></script>
+    <script type="text/javascript" src="javascript/exporting.js"></script>
 
     <script type="text/javascript" src="javascript/chart_users.js"></script>
     <script type="text/javascript" src="javascript/browsers.js"></script>
     <script type="text/javascript" src="javascript/users_countries.js"></script>
+    <script type="text/javascript" src="javascript/loading_time.js"></script>
+    <script type="text/javascript" src="javascript/jquery.gritter.js"></script>
 
     <script type="text/javascript">
+
+        $.extend($.gritter.options, {
+            class_name: 'gritter-light', // for light notifications (can be added directly to $.gritter.add too)
+            position: 'bottom-right', // possibilities: bottom-left, bottom-right, top-left, top-right
+            fade_in_speed: 100, // how fast notifications fade in (string or int)
+            fade_out_speed: 100, // how fast the notices fade out
+            time: 3000 // hang on the screen for...
+        });
+
         google.load("earth", "1");
         google.load("maps", "2");
         google.setOnLoadCallback(init);
@@ -35,25 +46,31 @@ Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
         <div id="container" style="min-width: 400px; height: 100%; margin: 0 auto"></div>
     </div>
     <div id="right">
+        <div id="buttons"></div>
         <ul>
             <li>
                 <div class="widget">
                     <div class="data users">
-                        <span class="title">Concurrent Users</span>
-                        <span class="count">50,000</span>
+                        <span class="title">Users in TOP 10 Countries</span>
+                        <span class="count">0</span>
                     </div>
                     <div class="mask" id="user-countries">
+                        <h2>Your Ad Could Be Here!</h2>
+                        <p>And Now We Can Tell You Who'll See It</p>
                     </div>
+                    <span id="time"></span>
                 </div>
             </li>
             <li>
                 <div class="widget">
-                    <div class="data" id="total"></div>
-                    <div class="mask">
-                        <h2>Test Data</h2>
+                    <div class="data time" id="loading_time">
+                        <span class="title">Average Loading Time (ms)</span>
+                        <span class="count">0</span>
+                    </div>
+                    <div class="mask" id="total">
+                        <h2>Your Ad Could Be Here!</h2>
 
-                        <p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of
-                            spring which I enjoy with my whole heart.</p>
+                        <p>And Now We Can Tell You Who'll See It</p>
                     </div>
                 </div>
             </li>
@@ -61,10 +78,9 @@ Apache license (http://www.apache.org/licenses/LICENSE-2.0.html)
                 <div class="widget">
                     <div class="data"></div>
                     <div class="mask">
-                        <h2>Test Data</h2>
+                        <h2>Your Ad Could Be Here!</h2>
 
-                        <p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of
-                            spring which I enjoy with my whole heart.</p>
+                        <p>And Now We Can Tell You Who'll See It</p>
                     </div>
                 </div>
             </li>

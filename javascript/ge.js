@@ -2,7 +2,18 @@ var ge, placemark,
     sap = [32.1966, 34.88436],
     target = 'moon',
     boundParams, timeParams,
-    clients =[];
+    clients = [],
+    stillRendering = false,
+    eventEnd = false,
+    rotate,
+    initialTimestamp = Number(new Date('Thu Dec 26 2012 12:46:50 GMT+0200 (IST)')),
+    rotateEarthParams = [0, 0, 16240001];
+
+
+Number.prototype.padLeft = function (base, chr) {
+    var len = (String(base || 10).length - String(this).length) + 1;
+    return len > 0 ? new Array(len).join(chr || '0') + this : this;
+};
 
 function init() {
     showPlanet('earth');
@@ -15,10 +26,13 @@ function initCallback(instance) {
 
     ge = instance;
 
-    addButton('Earth', goToEarth, 'right', 'earth');
-    addButton('Fly to SAP', goSAP, 'right', 'home');
-    addButton('Show Borders', showBorders, 'right', 'borders');
-    addButton('Hide Borders', hideBorders, 'right', 'bordershide');
+    addButton('Earth', goToEarth, 'buttons');
+    addButton('SAP', goSAP, 'buttons');
+    addButton('Show', showBorders, 'buttons');
+    addButton('Hide', hideBorders, 'buttons');
+    addButton('Play', play, 'buttons');
+    addButton('Stop', stop, 'buttons');
+    addButton('Clear', removePlacemarks, 'buttons');
 
 //    showSky();
 
@@ -145,7 +159,13 @@ function removeCover() {
     $('#band-aid').fadeIn();
 }
 
-function showEarth() {
+function showEarth(x, y, range) {
+
+    x = typeof(x) === 'undefined' ? sap[0] : x;
+    y = typeof(y) === 'undefined' ? sap[1] : y;
+
+    range = typeof(range) === 'undefined' ? 162401 : range;
+
     removeCover();
     ge.getOptions().setMapType(ge.MAP_TYPE_EARTH);
     setTimeout(function () {
@@ -153,24 +173,30 @@ function showEarth() {
         ge.getOptions().setFlyToSpeed(.2);  // Slow down the camera flyTo speed.
         var lookAt = ge.getView().copyAsLookAt(ge.ALTITUDE_RELATIVE_TO_GROUND);
         // latitude, longitude, altitude, altitudeMode, heading, tilt, range
-        lookAt.set(sap[0], sap[1], 0,
-            ge.ALTITUDE_RELATIVE_TO_GROUND, 0, 0, 162401);
+        lookAt.set(x, y, 0,
+            ge.ALTITUDE_RELATIVE_TO_GROUND, 0, 0, range);
         ge.getView().setAbstractView(lookAt);
         ge.getOptions().setFlyToSpeed(oldFlyToSpeed);
 
-        google.earth.addEventListener(ge.getView(), 'viewchangeend', function (evt) {
-            boundParams = getBoundParams();
-            timeParams = getTimeParams();
-
-            renderUserCountries();
-            renderChartUsers();
-            renderBrowsers();
-            renderClients();
-
-        });
+        if (!eventEnd) {
+            google.earth.addEventListener(ge.getView(), 'viewchangeend', function (evt) {
+                updateEarth();
+                eventEnd = true;
+            });
+        }
 
     }, 1000); // Start the zoom-in after one second.
 
+}
+
+function updateEarth() {
+    boundParams = getBoundParams();
+    timeParams = getTimeParams();
+
+    renderUserCountries();
+    renderChartUsers();
+    renderBrowsers();
+    renderClients();
 }
 
 function goSAP(timestamp) {
@@ -191,7 +217,7 @@ function hideSun() {
     ge.getSun().setVisibility(false);
 }
 
-function setPlaceMark(markName, iconURL, x, y, scale) {
+function setPlaceMark(markName, iconURL, x, y, scale, sticky) {
 // Create the placemark.
     var placemark = ge.createPlacemark('');
     placemark.setName(markName);
@@ -213,17 +239,19 @@ function setPlaceMark(markName, iconURL, x, y, scale) {
 
 // Add the placemark to Earth.
     ge.getFeatures().appendChild(placemark);
-    clients.push(placemark);
+    if (!sticky) {
+        clients.push(placemark);
+    }
 }
 
 function removePlacemarks() {
-    //var kmlObjectList = ge.getFeatures().getChildNodes();
-    console.log(clients.length);
-    for (var i = 0; i < clients.length; i++) {
-        console.log("Delete ",clients[i]);
+    var i = 0, l = clients.length;
+    for (i; i < l; i++) {
+        //var outOfBaou
+//        if (outOfBound) {
         ge.getFeatures().removeChild(clients[i]);
+//        }
     }
-    clients = [];
 }
 
 function addButton(caption, clickHandler, containerId, className) {
@@ -246,8 +274,8 @@ function goToEarth() {
 
     showEarth();
     visAuto();
-    showSun();
-    setPlaceMark("SAP, Ra'anana", 'http://dl.dropbox.com/u/9268245/SAP_icon.png', sap[0], sap[1], 3.0);
+//    showSun();
+    setPlaceMark("SAP, Ra'anana", 'http://dl.dropbox.com/u/9268245/SAP_icon.png', sap[0], sap[1], 3.0, true);
 
 }
 
@@ -263,7 +291,19 @@ function getBounds() {
 }
 
 function getTimeParams() {
-    return 't0=&t1=';
+
+    var t = new Date(initialTimestamp),
+        datetime = [
+            t.getFullYear(),
+            (t.getMonth() + 1).padLeft(),
+            t.getDate().padLeft(),
+            t.getHours().padLeft(),
+            t.getMinutes().padLeft()
+        ];
+
+    $('#time').text(t);
+
+    return 't0=' + datetime.join('');
 }
 
 function getBoundParams() {
@@ -272,6 +312,9 @@ function getBoundParams() {
 }
 
 function goTo(name) {
+
+    stop();
+
     var geocodeLocation = name;
 
     var geocoder = new google.maps.ClientGeocoder();
@@ -282,96 +325,108 @@ function goTo(name) {
             ge.getView().setAbstractView(lookAt);
 
             var country = geocoder.ca.ca[name.toLowerCase()].Placemark[0].AddressDetails.Country.CountryNameCode;
-            setPlaceMark(name, 'http://dl.dropbox.com/u/9268245/flags/' + country + '.png', point.y, point.x, 0.8);
+            setPlaceMark(name, 'http://dl.dropbox.com/u/9268245/flags/' + country + '.png', point.y, point.x, 0.8, false);
 
         }
     });
 
 }
 
-function getUserIconURL(avgSpeed) {
-    var userIconURL = "http://t3.gstatic.com/images?q=tbn:ANd9GcSR6J1ZWF2CorpjoMl2QM8FBfFLlmjf7a0UthO3g5Cl5f76gGrEpWYh-A";
-    if(avgSpeed > 0 && avgSpeed <= 5) {
-        userIconURL = 'http://dl.dropbox.com/u/9268245/red_monster.png';
-    }else if(avgSpeed > 5 && avgSpeed <= 10) {
-        userIconURL = 'http://dl.dropbox.com/u/9268245/yellow_monster.png';
-    }else if(avgSpeed > 10 && avgSpeed <= 20) {
+function getUserIconURL(avgTime) {
+    var userIconURL = "";
+    if (avgTime >= 0 && avgTime <= 50) {
         userIconURL = 'http://dl.dropbox.com/u/9268245/green_monster.png';
-    }else if(avgSpeed >= 20) {
+    } else if (avgTime > 50 && avgTime <= 200) {
+        userIconURL = 'http://dl.dropbox.com/u/9268245/yellow_monster.png';
+    } else if (avgTime > 200 && avgTime <= 700) {
+        userIconURL = 'http://dl.dropbox.com/u/9268245/red_monster.png';
+    } else if (avgTime > 700) {
         userIconURL = 'http://dl.dropbox.com/u/9268245/BOBA.png';
     }
     return userIconURL;
 }
 
 function renderClients() {
+//     return false
+    if (stillRendering) {
+        return false;
+    }
+
+    var speed = 0;
+
     jQuery.ajax({
         url: 'http://10.26.181.181:8080/labs/API/getUsers?' + timeParams + '&' + boundParams + '&callback=?',
         async: false,
         contentType: "application/json",
         dataType: 'jsonp',
-        type: 'GET'
+        type: 'GET',
+        timeout: 30000
     }).done(function (data, type, xhr) {
 
-            removePlacemarks();
+            stillRendering = true;
 
-            var fake = [
-                {
-                    name: 'test1',
-                    lon: 32.1,
-                    lat: 35.1,
-                    avgSpeed: 1
-                },
-                {
-                    name: 'test2',
-                    lon: 32.1,
-                    lat: 35.3,
-                    avgSpeed: 10
-                },
-                {
-                    name: 'test3',
-                    lon: 32.1,
-                    lat: 35.5,
-                    avgSpeed: 2
-                },
-                {
-                    name: 'test4',
-                    lon: 32.1,
-                    lat: 35.7,
-                    avgSpeed: 5
-                },
-                {
-                    name: 'test5',
-                    lon: 32.1,
-                    lat: 35.9,
-                    avgSpeed: 7
-                },
-                {
-                    name: 'test6',
-                    lon: 32.1,
-                    lat: 36.1,
-                    avgSpeed: 3
-                },
-                {
-                    name: 'test7',
-                    lon: 32.1,
-                    lat: 39.3,
-                    avgSpeed: 7
-                },
-                {
-                    name: 'BOBA',
-                    lon: 32.5,
-                    lat: 35.3,
-                    avgSpeed: 100
-                }
-            ];
+            console.log(data);
 
-            for(var i=0; i<fake.length; i+=1) {
-                setPlaceMark(fake[i].name, getUserIconURL(fake[i].avgSpeed), fake[i].lon, fake[i].lat, 1.0);
+            var fake = data;
+
+            for (var i = 0; i < fake.length; i += 1) {
+                setPlaceMark(fake[i].name, getUserIconURL(fake[i].avgSpeed), fake[i].lon, fake[i].lat, 1.0, false);
+                speed += fake[i].avgSpeed;
             }
 
+            stillRendering = false;
 
-    }).fail(function () {
+            $('#loading_time .count').text((speed / fake.length).toFixed(3));
+
+        }).fail(function () {
             console.log('fail', arguments)
-    });
+        });
 
 }
+
+function play() {
+    rotateEarth()
+}
+
+function stop() {
+    rotate = window.clearInterval(rotate);
+}
+
+function rotateEarth() {
+    showEarth(rotateEarthParams[0], rotateEarthParams[1], rotateEarthParams[2]);
+
+    var i = 0;
+    var x = 30,
+        y,
+        step = 10,
+        greed = 20,
+        numSteps = 360 / greed,
+        milliSecInStep = (24 / numSteps) * 60 * 60 * 1000;
+
+    rotateEarthParams[2] = 8024001;
+
+    rotate = window.setInterval(function () {
+
+        i += greed;
+        initialTimestamp += milliSecInStep;
+
+        if (i >= 360) i = 0;
+
+        if (i > 0 && i <= 180) {
+            y = i;
+        } else {
+            y = (180 - Math.abs(180 - i)) * -1;
+        }
+
+        rotateEarthParams[0] = x;
+        rotateEarthParams[1] = y;
+
+        showEarth(x, y, rotateEarthParams[2]);
+//        removePlacemarks();
+
+//        updateEarth();
+
+    }, step * 1000);
+}
+
+
