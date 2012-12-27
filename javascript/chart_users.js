@@ -8,7 +8,7 @@ $(function () {
                 spacingRight: 20
             },
             title: {
-                text: 'Concurrent users'
+                text: 'Visitors by TimeZone'
             },
 //            subtitle: {
 //                text: document.ontouchstart === undefined ?
