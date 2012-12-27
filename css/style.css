@@ -181,13 +181,12 @@ ul {
     list-style: none;
     width: 100%;
     height: 100%;
-    margin-top: 40px;
 }
 
 li {
     list-style: none;
     width: 90%;
-    height: 30.5%;
+    height: 29%;
     display: block;
     margin: 5%;
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f6f6), color-stop(49%, #dbdce2), color-stop(100%, #dddfe3), color-stop(100%, #f5f6f6));
@@ -289,9 +288,8 @@ li {
 }
 
 #buttons {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    float: left;
+    margin: 10px;
 }
 
 input.navigation {
