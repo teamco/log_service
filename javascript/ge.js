@@ -7,7 +7,10 @@ var ge, placemark,
     eventEnd = false,
     rotate,
     initialTimestamp = Number(new Date('Thu Dec 26 2012 12:46:50 GMT+0200 (IST)')),
-    rotateEarthParams = [0, 0, 16240001];
+    rotateEarthParams = [0, 0, 16240001],
+    us = true,
+    russia = true,
+    israel = true;
 
 
 Number.prototype.padLeft = function (base, chr) {
@@ -315,15 +318,23 @@ function getTimeParams() {
     $('#time').text(t);
 
     if (t.getDate() === 27 && t.getHours() > 0 && t.getHours() < 6) {
-        addNote('United States', 'us', 'off', 'United States', 920401);
+        if (us)
+            addNote('United States', 'us', 'off', 'United States', 920401);
+        us = false;
     }
 
-    if (t.getDate() === 28 && t.getHours() > 0 && t.getHours() < 6) {
-        addNote('Russian Federation', 'ru', 'slow', 'Moscow', 220401);
+    if (t.getDate() === 27 && t.getHours() > 6 && t.getHours() < 10) {
+        if (russia) {
+            initialTimestamp += 32 * 60 * 60 * 1000;
+            addNote('Russian Federation', 'ru', 'slow', 'Moscow', 220401);
+        }
+        russia = false;
     }
 
     if (t.getDate() === 29 && t.getHours() > 0 && t.getHours() < 12) {
-        addNote('Israel', 'IL', 'peak', 'Israel', 920401);
+        if (israel)
+            addNote('Israel', 'IL', 'peak', 'Israel', 920401);
+        israel = false;
     }
 
     return 't0=' + datetime.join('') + '&t1=' + datetime1.join('');
@@ -425,6 +436,7 @@ function renderClients() {
 }
 
 function play() {
+    stop();
     rotateEarth()
 }
 
@@ -447,8 +459,16 @@ function rotateEarth() {
 
     rotate = window.setInterval(function () {
 
-        i += greed;
-        initialTimestamp += milliSecInStep;
+        console.log("I=" + i);
+        if (Math.abs(i) > 110) {
+            console.log("jumping long step...");
+            i += 4 * greed;
+            initialTimestamp += 4 * milliSecInStep;
+        }
+        else {
+            i += greed;
+            initialTimestamp += milliSecInStep;
+        }
 
         if (i >= 360) i = 0;
 
@@ -458,13 +478,6 @@ function rotateEarth() {
             y = (180 - Math.abs(180 - i)) * -1;
         }
 
-        console.log("Y=" + y);
-
-        if (Math.abs(y) > 110) {
-            console.log("jumping double step...");
-            y += 2.5 * greed;
-            initialTimestamp += 2.5 * milliSecInStep;
-        }
 
         rotateEarthParams[0] = x;
         rotateEarthParams[1] = y;
