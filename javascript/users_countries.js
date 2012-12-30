@@ -7,7 +7,7 @@ $(function () {
                 type: 'bar'
             },
             title: {
-                text: 'Users Distribution by Country'
+                text: 'Visitors Distribution by Country'
             },
             xAxis: {
                 categories: [''],

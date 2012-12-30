@@ -7,7 +7,7 @@ $(function () {
                 type: 'bar'
             },
             title: {
-                text: 'DOM'
+                text: 'DOM Elements'
             },
             xAxis: {
                 categories: [''],
