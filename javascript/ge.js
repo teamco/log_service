@@ -460,10 +460,10 @@ function rotateEarth() {
 
         console.log("Y=" + y);
 
-        if (Math.abs(y) > 130) {
+        if (Math.abs(y) > 110) {
             console.log("jumping double step...");
-            y += greed;
-            initialTimestamp += milliSecInStep;
+            y += 3 * greed;
+            initialTimestamp += 3 * milliSecInStep;
         }
 
         rotateEarthParams[0] = x;
