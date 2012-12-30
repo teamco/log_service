@@ -281,13 +281,14 @@ function goToEarth() {
 }
 
 function getBounds() {
-    var globeBounds = ge.getView().getViewportGlobeBounds();
+    var globeBounds = ge.getView().getViewportGlobeBounds(),
+        delta = 1;
 
     return {
-        north: globeBounds.getNorth() * 0.85,
-        east: globeBounds.getEast() * 0.85,
-        south: globeBounds.getSouth() * 0.85,
-        west: globeBounds.getWest() * 0.85
+        north: globeBounds.getNorth() * delta,
+        east: globeBounds.getEast() * delta,
+        south: globeBounds.getSouth() * delta,
+        west: globeBounds.getWest() * delta
     }
 }
 
@@ -409,7 +410,10 @@ function renderClients() {
 
             stillRendering = false;
 
-            $('#loading_time .count').text((speed / fake.length).toFixed(3));
+            var fakeSpeed = (speed / fake.length).toFixed(3);
+            fakeSpeed = isNaN(fakeSpeed) ? 'Loading...' : fakeSpeed;
+
+            $('#loading_time .count').text(fakeSpeed);
 
         }).fail(function () {
             console.log('fail', arguments)
