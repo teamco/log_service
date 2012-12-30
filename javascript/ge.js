@@ -32,10 +32,10 @@ function initCallback(instance) {
     addButton('Earth', goToEarth, 'buttons');
     addButton('SAP', goSAP, 'buttons');
     addButton('Show', showBorders, 'buttons');
-    addButton('Hide', hideBorders, 'buttons');
+//    addButton('Hide', hideBorders, 'buttons');
     addButton('Play', play, 'buttons');
-    addButton('Stop', stop, 'buttons');
-    addButton('Clear', removePlacemarks, 'buttons');
+//    addButton('Stop', stop, 'buttons');
+//    addButton('Clear', removePlacemarks, 'buttons');
 
     showSky();
 
@@ -319,7 +319,7 @@ function getTimeParams() {
 
     if (t.getDate() === 27 && t.getHours() > 0 && t.getHours() < 6) {
         if (us)
-            addNote('United States', 'us', 'off', 'United States', 920401);
+            addNote('United States', 'us', 'off', 'United States', 3420401);
         us = false;
     }
 
@@ -331,7 +331,7 @@ function getTimeParams() {
         russia = false;
     }
 
-    if (t.getDate() === 28 && t.getHours() > 16 && t.getHours() < 18) {
+    if (t.getDate() === 28 && t.getHours() > 6 && t.getHours() < 24) {
         if (israel) {
             initialTimestamp += 24 * 60 * 60 * 1000;
             addNote('Israel', 'IL', 'peak', 'Israel', 920401);
