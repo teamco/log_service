@@ -318,8 +318,10 @@ function getTimeParams() {
     $('#time').text(t);
 
     if (t.getDate() === 27 && t.getHours() > 0 && t.getHours() < 6) {
-        if (us)
+        if (us) {
+            initialTimestamp  =1356691610000;
             addNote('United States', 'us', 'off', 'United States', 3420401);
+        }
         us = false;
     }
 
