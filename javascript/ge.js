@@ -315,15 +315,15 @@ function getTimeParams() {
     $('#time').text(t);
 
     if (t.getDate() === 27 && t.getHours() > 0 && t.getHours() < 6) {
-        addNote('United States', 'us', 'off');
+        addNote('United States', 'us', 'off', 'United States', 920401);
     }
 
     if (t.getDate() === 28 && t.getHours() > 0 && t.getHours() < 6) {
-        addNote('Russian Federation', 'ru', 'slow');
+        addNote('Russian Federation', 'ru', 'slow', 'Moscow', 220401);
     }
 
-    if (t.getDate() === 29 && t.getHours() > 0 && t.getHours() < 6) {
-        addNote('Israel', 'IL', 'peak');
+    if (t.getDate() === 29 && t.getHours() > 0 && t.getHours() < 12) {
+        addNote('Israel', 'IL', 'peak', 'Israel', 920401);
     }
 
     return 't0=' + datetime.join('') + '&t1=' + datetime1.join('');
@@ -334,9 +334,11 @@ function getBoundParams() {
     return 'north=' + bounds.north + '&east=' + bounds.east + '&south=' + bounds.south + '&west=' + bounds.west;
 }
 
-function goTo(name) {
+function goTo(name, range) {
 
     stop();
+
+    range = range || 920401;
 
     var geocodeLocation = name;
 
@@ -344,7 +346,7 @@ function goTo(name) {
     geocoder.getLatLng(geocodeLocation, function (point) {
         if (point) {
             var lookAt = ge.createLookAt('');
-            lookAt.set(point.y, point.x, 30000, ge.ALTITUDE_RELATIVE_TO_GROUND, 0, 0, 920401);
+            lookAt.set(point.y, point.x, 30000, ge.ALTITUDE_RELATIVE_TO_GROUND, 0, 0, range);
             ge.getView().setAbstractView(lookAt);
 
             var country = geocoder.ca.ca[name.toLowerCase()].Placemark[0].AddressDetails.Country.CountryNameCode;
@@ -435,8 +437,8 @@ function rotateEarth() {
     var i = 0;
     var x = 30,
         y,
-        step = 10,
-        greed = 20,
+        step = 10,     //rotation frequency
+        greed = 20,    //step size in degrees
         numSteps = 360 / greed,
         milliSecInStep = (24 / numSteps) * 60 * 60 * 1000;
 
@@ -455,8 +457,17 @@ function rotateEarth() {
             y = (180 - Math.abs(180 - i)) * -1;
         }
 
+        console.log("Y=" + y);
+
+        if (Math.abs(y) > 130) {
+            console.log("jumping double step...");
+            y += greed;
+            initialTimestamp += milliSecInStep;
+        }
+
         rotateEarthParams[0] = x;
         rotateEarthParams[1] = y;
+
 
         showEarth(x, y, rotateEarthParams[2]);
 //        removePlacemarks();

@@ -80,15 +80,16 @@ function renderUserCountries() {
         });
 }
 
-function addNote(country, short, type) {
+function addNote(country, short, type, jumpTo, altitude) {
 
     var text = '';
+
     if (type === 'off') {
-        text = 'Service is not available to ' + country + ' residents.<br /><br /><a href=\'javascript:goTo("' + country + '")\'>Fly to ' + country + '</a>';
-    } else if (type === 'slow'){
-        text = 'Traffic rate stunted for ' + country + ' residents.<br /><br /><a href=\'javascript:goTo("' + country + '")\'>Fly to ' + country + '</a>';
-    } else if (type === 'peak'){
-        text = 'Record number of visitors from ' + country + ' detected.<br /><br /><a href=\'javascript:goTo("' + country + '")\'>Fly to ' + country + '</a>';
+        text = 'Service is not available to ' + country + ' residents.<br /><br /><a href=\'javascript:goTo("' + jumpTo + '", ' + altitude + ')\'>Fly to ' + country + '</a>';
+    } else if (type === 'slow') {
+        text = 'Traffic rate stunted for ' + country + ' residents.<br /><br /><a href=\'javascript:goTo("' + jumpTo + '", ' + altitude + ')\'>Fly to ' + country + '</a>';
+    } else if (type === 'peak') {
+        text = 'Record number of visitors from ' + country + ' detected.<br /><br /><a href=\'javascript:goTo("' + jumpTo + '", ' + altitude + ')\'>Fly to ' + country + '</a>';
     }
 
     $.gritter.add({
