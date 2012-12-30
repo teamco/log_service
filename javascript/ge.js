@@ -350,7 +350,7 @@ function goTo(name, range) {
             ge.getView().setAbstractView(lookAt);
 
             var country = geocoder.ca.ca[name.toLowerCase()].Placemark[0].AddressDetails.Country.CountryNameCode;
-            setPlaceMark(name, 'http://localhost/log_service/images/flags/' + country + '.png', point.y, point.x, 0.8, false);
+            setPlaceMark(name, 'http://tlvm60245615a/log_service/images/flags/' + country + '.png', point.y, point.x, 0.8, false);
 
         }
     });
@@ -368,17 +368,17 @@ function getUserIconURL(avgTime) {
 
     var userIconURL = "";
     if (avgTime >= 0 && avgTime <= 50) {
-        userIconURL = 'http://localhost/log_service/images/green_monster.png';
+        userIconURL = 'http://tlvm60245615a/log_service/images/green_monster.png';
     } else if (avgTime > 50 && avgTime <= 200) {
-        userIconURL = 'http://localhost/log_service/images/yellow_monster.png';
+        userIconURL = 'http://tlvm60245615a/log_service/images/yellow_monster.png';
     } else if (avgTime > 200 && avgTime <= 700) {
 //        userIconURL = 'http://dl.dropbox.com/u/9268245/red_monster.png';
-        userIconURL = 'http://localhost/log_service/images/red_monster.png';
+        userIconURL = 'http://tlvm60245615a/log_service/images/red_monster.png';
     } else if (avgTime > 700) {
         var index = Math.floor((Math.random() * 4));
         index = index > 3 ? 3 : index;
 
-        userIconURL = 'http://localhost/log_service/images/' + img[index];
+        userIconURL = 'http://tlvm60245615a/log_service/images/' + img[index];
     }
     return userIconURL;
 }
