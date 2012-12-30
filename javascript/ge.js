@@ -345,6 +345,14 @@ function goTo(name) {
 }
 
 function getUserIconURL(avgTime) {
+
+    var img = [
+        'evgeny-himmelreich.jpg',
+        'BOBA.png',
+        'soshin.jpg',
+        'kravcheg.jpg'
+    ];
+
     var userIconURL = "";
     if (avgTime >= 0 && avgTime <= 50) {
         userIconURL = 'http://dl.dropbox.com/u/9268245/green_monster.png';
@@ -353,7 +361,10 @@ function getUserIconURL(avgTime) {
     } else if (avgTime > 200 && avgTime <= 700) {
         userIconURL = 'http://dl.dropbox.com/u/9268245/red_monster.png';
     } else if (avgTime > 700) {
-        userIconURL = 'http://dl.dropbox.com/u/9268245/BOBA.png';
+        var index = Math.floor((Math.random() * 4));
+        index = index > 3 ? 3 : index;
+
+        userIconURL = 'http://dl.dropbox.com/u/9268245/' + img[index];
     }
     return userIconURL;
 }
