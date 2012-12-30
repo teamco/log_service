@@ -323,17 +323,17 @@ function getTimeParams() {
         us = false;
     }
 
-    if (t.getDate() === 27 && t.getHours() > 6 && t.getHours() < 10) {
+    if (t.getDate() === 27 && t.getHours() > 8 && t.getHours() < 10) {
         if (russia) {
-            initialTimestamp += 32 * 60 * 60 * 1000;
+            initialTimestamp = 1356702410000;
             addNote('Russian Federation', 'ru', 'slow', 'Moscow', 220401);
         }
         russia = false;
     }
 
-    if (t.getDate() === 28 && t.getHours() > 6 && t.getHours() < 24) {
+    if (t.getDate() === 28 && t.getHours() > 13 && t.getHours() < 24) {
         if (israel) {
-            initialTimestamp += 24 * 60 * 60 * 1000;
+            initialTimestamp = 1356788810000;
             addNote('Israel', 'IL', 'peak', 'Israel', 920401);
         }
         israel = false;
