@@ -94,11 +94,11 @@ function addNote(country, short, type, jumpTo, altitude) {
 
     $.gritter.add({
         // (string | mandatory) the heading of the notification
-        title: 'Warning',
+        title: 'Alert',
         // (string | mandatory) the text inside the notification
         text: text,
         // (string | optional) the image to display on the left
-        image: 'http://dl.dropbox.com/u/9268245/flags/' + short + '.png',
+        image: 'http://tlvm60245615a/log_service/images/flags/' + short + '.png',
         // (bool | optional) if you want it to fade out on its own or just sit there
         sticky: true,
         // (int | optional) the time you want it to be alive for before fading out

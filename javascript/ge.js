@@ -279,7 +279,7 @@ function goToEarth() {
     showEarth();
     visAuto();
 //    showSun();
-    setPlaceMark("SAP, Ra'anana", 'http://dl.dropbox.com/u/9268245/SAP_icon.png', sap[0], sap[1], 3.0, true);
+    setPlaceMark("SAP, Ra'anana", 'http://tlvm60245615a/log_service/images/SAP_icon.png', sap[0], sap[1], 3.0, true);
 
 }
 
@@ -331,9 +331,11 @@ function getTimeParams() {
         russia = false;
     }
 
-    if (t.getDate() === 29 && t.getHours() > 0 && t.getHours() < 12) {
-        if (israel)
+    if (t.getDate() === 28 && t.getHours() > 16 && t.getHours() < 18) {
+        if (israel) {
+            initialTimestamp += 24 * 60 * 60 * 1000;
             addNote('Israel', 'IL', 'peak', 'Israel', 920401);
+        }
         israel = false;
     }
 
