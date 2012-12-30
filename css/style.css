@@ -360,7 +360,9 @@ span#time {
     position: absolute;
     bottom: 10px;
     left: 10px;
-    font-size: 12px;
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 span#site-title {
