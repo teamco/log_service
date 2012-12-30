@@ -350,7 +350,7 @@ input.navigation.bordershide {
     display: table-cell;
     height: 100%;
     width: 100%;
-    font-size: 500%;
+    font-size: 350%;
     vertical-align: middle;
     text-shadow: 2px 2px 10px #333;
     color: steelBlue;
@@ -373,7 +373,7 @@ span#site-title {
     text-shadow: 2px 2px 6px black;
     color: #EEE;
     background: transparent url("../images/Purple_Eye.png") 32% 10px no-repeat;
-    background-size: 7%;
+    background-size: 5%;
 }
 
 span#hebrew {

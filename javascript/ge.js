@@ -197,6 +197,7 @@ function updateEarth() {
     renderChartUsers();
     renderBrowsers();
     renderClients();
+    rendeDoms();
 }
 
 function goSAP(timestamp) {
@@ -283,10 +284,10 @@ function getBounds() {
     var globeBounds = ge.getView().getViewportGlobeBounds();
 
     return {
-        north: globeBounds.getNorth(),
-        east: globeBounds.getEast(),
-        south: globeBounds.getSouth(),
-        west: globeBounds.getWest()
+        north: globeBounds.getNorth() * 0.85,
+        east: globeBounds.getEast() * 0.85,
+        south: globeBounds.getSouth() * 0.85,
+        west: globeBounds.getWest() * 0.85
     }
 }
 
@@ -299,6 +300,15 @@ function getTimeParams() {
             t.getDate().padLeft(),
             t.getHours().padLeft(),
             t.getMinutes().padLeft()
+        ];
+
+    var t1 = new Date(initialTimestamp + 6 * 60 * 60 * 1000),
+        datetime1 = [
+            t1.getFullYear(),
+            (t1.getMonth() + 1).padLeft(),
+            t1.getDate().padLeft(),
+            t1.getHours().padLeft(),
+            t1.getMinutes().padLeft()
         ];
 
     $('#time').text(t);
@@ -315,7 +325,7 @@ function getTimeParams() {
         addNote('Israel', 'IL', 'peak');
     }
 
-    return 't0=' + datetime.join('');
+    return 't0=' + datetime.join('') + '&t1=' + datetime1.join('');
 }
 
 function getBoundParams() {
@@ -426,7 +436,7 @@ function rotateEarth() {
         numSteps = 360 / greed,
         milliSecInStep = (24 / numSteps) * 60 * 60 * 1000;
 
-    rotateEarthParams[2] = 8024001;
+    rotateEarthParams[2] = 5024001;
 
     rotate = window.setInterval(function () {
 
